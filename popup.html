@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <title>Save Bet Form</title>
+    <style>
+        /* Dark theme styles */
+        body {
+            background-color: #333;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            min-width: 400px;
+            min-height: 300px;
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #aaa;
+        }
+        input {
+            width: calc(100% - 12px);
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #555;
+            background-color: #444;
+            color: #fff;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #00B073;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .bookmaker {
+            margin-bottom: 20px;
+            border: 1px solid #555;
+            padding: 10px;
+        }
+        .remove {
+            color: #ff3333;
+            cursor: pointer;
+        }
+        select.bookmakerName,select.bookmakerBet {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #555;
+            background-color: #444;
+            color: #fff;
+
+        }
+    </style>
+</head>
+<body>
+<h1>Save Bet</h1>
+<form id="saveBetForm">
+    <div id="bookmakersContainer">
+    </div>
+<!--    <button type="button" id="addBookmaker">Add Bookmaker</button>-->
+    <button id="saveButton" style="display: none" type="submit">Save Bet</button>
+</form>
+<script src="popup.js"></script>
+
+</body>
+</html>
