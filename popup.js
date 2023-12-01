@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // link.addEventListener('click', function () {
     //     addBookmaker();
     // });
-
     document.addEventListener('click', function (event) {
         if (event.target.classList.contains('remove')) {
             removeBookmaker(event.target);
@@ -63,6 +62,7 @@ const formatDate = (date) => {
 
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 };
+
 function populateFromPastedText() {
     const pastedText = document.getElementById('pastedText').value;
 
@@ -152,7 +152,7 @@ function addBookmaker(bookmaker = null, marketType = null, odd = null, stake = n
                 option.textContent = apiBookmaker.name;
 
                 // If the bookmaker passed to the function matches, set it as selected
-                if (apiBookmaker.surebetName=== bookmaker) {
+                if (apiBookmaker.surebetName === bookmaker) {
                     option.selected = true;
                 }
 
@@ -254,7 +254,8 @@ function saveBetDetails() {
 
     // Show loader while processing the request
     showLoader();
-
+    const saveButton = document.getElementById('saveButton');
+    saveButton.style.display = 'none';
     fetch('https://api.arbs.site/bets', {
         method: 'POST',
         headers: {
@@ -285,20 +286,16 @@ function saveBetDetails() {
 // Function to show loader
 function showLoader() {
     // Create a loader element or display a loading spinner
-    const loader = document.createElement('div');
-    loader.className = 'loader';
+    const loader = document.getElementById('loader');
+    loader.style.display = 'block';
     // Add styling or spinner logic to the loader element as needed
 
-    // Add the loader to a specific container or the document body
-    document.body.appendChild(loader);
 }
 
 // Function to hide loader
 function hideLoader() {
     // Find and remove the loader element
-    const loader = document.querySelector('.loader');
-    if (loader) {
-        loader.remove();
-    }
+    const loader = document.getElementById('loader');
+    loader.style.display = 'none';
 }
 
