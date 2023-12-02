@@ -253,7 +253,7 @@ function saveBetDetails() {
     const betDetails = collectBetDetails();
 
     // Show loader while processing the request
-    showLoader();
+    showMessage('Saving...');
     const saveButton = document.getElementById('saveButton');
     saveButton.style.display = 'none';
     fetch('https://api.arbs.site/bets', {
@@ -266,36 +266,42 @@ function saveBetDetails() {
         .then(response => response.json())
         .then(data => {
             // Hide loader when the request is complete
-            hideLoader();
+            showMessage('Saved!',3000);
 
             if (data.betId) {
                 console.log('Bet saved successfully. Bet ID:', data.betId);
                 // Reset the form or show the initial state
-                resetForm(); // Implement a function to reset the form
+
             } else {
                 console.error('Error saving bet. No bet ID received.');
             }
         })
         .catch(error => {
-            hideLoader();
+            hideMessage();
             console.error('Error saving bet:', error);
         });
 }
 
 
 // Function to show loader
-function showLoader() {
+function showMessage(text, time = null) {
     // Create a loader element or display a loading spinner
-    const loader = document.getElementById('loader');
-    loader.style.display = 'block';
+    const message = document.getElementById('message');
+    message.style.display = 'block';
+    message.textContent = text;
+    if (time) {
+        setTimeout(function () {
+            hideMessage();
+        }, time);
+    }
     // Add styling or spinner logic to the loader element as needed
 
 }
 
 // Function to hide loader
-function hideLoader() {
+function hideMessage() {
     // Find and remove the loader element
-    const loader = document.getElementById('loader');
+    const loader = document.getElementById('message');
     loader.style.display = 'none';
 }
 
