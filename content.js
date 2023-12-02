@@ -2,7 +2,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     if (request === "getClickedEl") {
         sendResponse({odd: clickedEl.textContent});
     } else if (request.message === 'addCustomButton' && request.url.startsWith('https://en.surebet.com/surebet')) {
-        addCustomButtonToTbodies()
+        // addCustomButtonToTbodies()
     } else if (request.message === 'appendBetSlip') {
         const betJson = request.betJson; // Received bet JSON from background script
         // Call the function to update or create the bet slip
