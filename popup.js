@@ -267,7 +267,7 @@ function saveBetDetails() {
 function getOptimizedStakes() {
     const betDetails = collectBetDetails();
 
-    var money = document.getElementById('total_stake').value;
+    var money = parseInt(document.getElementById('total_stake').value);
     if (!money) {
         money = 100;
     }
