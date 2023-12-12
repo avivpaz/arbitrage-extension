@@ -210,7 +210,7 @@ function collectBetDetails() {
         const bookmakerId = bookmakerDiv.querySelector('.bookmakerName').value;
         const marketType = bookmakerDiv.querySelector('.bookmakerMarket').value;
         const deposit = bookmakerDiv.querySelector('.bookmakerDeposit').value;
-        const odd = bookmakerDiv.querySelector('.bookmakerOdd').value;
+        const odd = parseFloat(bookmakerDiv.querySelector('.bookmakerOdd').value);
         const stake = bookmakerDiv.querySelector('.bookmakerStake').value;
         const betType = bookmakerDiv.querySelector('.bookmakerBet').value; // Updated to dropdown value
         const backerStakeElement = bookmakerDiv.querySelector('.bookmakerBackerStake'); // Updated to dropdown value
