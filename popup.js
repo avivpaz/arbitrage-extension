@@ -3,53 +3,41 @@ document.addEventListener('DOMContentLoaded', function () {
     // link.addEventListener('click', function () {
     //     addBookmaker();
     // });
-    document.addEventListener('click', function (event) {
-        if (event.target.classList.contains('remove')) {
-            removeBookmaker(event.target);
-        }
+    // document.addEventListener('click', function (event) {
+    //     if (event.target.classList.contains('remove')) {
+    //         removeBookmaker(event.target);
+    //     }
+    // });
+
+    const populateButton = document.getElementById('populateButton');
+    populateButton.addEventListener('click', function () {
+        populateFromPastedText(document.getElementById('pastedText').value);
     });
 
+    // Event listener for the save button click
+    const resetButton = document.getElementById('resetButton');
+    resetButton.addEventListener('click', function () {
+        localStorage.removeItem('pastedText')
+        updatePopupState();
+    });
+
+    // Event listener for the save button click
+    const optimizedStakes = document.getElementById('optimizedStakes');
+    optimizedStakes.addEventListener('click', function () {
+        getOptimizedStakes()
+    });
 
 // Event listener for the save button click
     const saveButton = document.getElementById('saveButton');
     saveButton.addEventListener('click', saveBetDetails);
 
-    checkBookmakersPresence();
+    var pastedText = localStorage.getItem('pastedText')
+    if (pastedText) {
+        populateFromPastedText(pastedText);
+    }
 
 
 });
-
-
-// Function to check bookmakers presence and display default input if not present
-function checkBookmakersPresence() {
-    const bookmakersContainer = document.getElementById('bookmakersContainer');
-    const bookmakers = bookmakersContainer.querySelectorAll('.bookmaker');
-
-    if (bookmakers.length === 0) {
-        // Show the input for pasting text structure
-        addDefaultInput(bookmakersContainer);
-    }
-}
-
-// Function to add default input for pasting text structure
-function addDefaultInput(container) {
-    const defaultInputDiv = document.createElement('div');
-    defaultInputDiv.innerHTML = `
-        <label for="pastedText">Paste Text Structure:</label>
-        <textarea id="pastedText" class="pastedText" rows="10" cols="50"></textarea>
-        <button id="populateButton">Load Bet</button>
-    `;
-    container.appendChild(defaultInputDiv);
-    // Add event listener to the "Populate From Text" button
-    const populateButton = document.getElementById('populateButton');
-    const saveButton = document.getElementById('saveButton');
-
-    populateButton.addEventListener('click', function () {
-        populateFromPastedText();
-        populateButton.style.display = 'none'; // Hide the "Create Bet" button
-        saveButton.style.display = 'block'; // Show the "Save Bet" button
-    });
-}
 
 // Custom formatting to maintain the same UTC time
 const formatDate = (date) => {
@@ -63,9 +51,9 @@ const formatDate = (date) => {
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 };
 
-function populateFromPastedText() {
-    const pastedText = document.getElementById('pastedText').value;
-
+function populateFromPastedText(pastedText) {
+    updatePopupState('newBet');
+    localStorage.setItem('pastedText', pastedText)
     // Split the pasted text by lines
     const lines = pastedText.split('\n').filter(line => line.trim().length > 0);
 
@@ -200,11 +188,6 @@ function addBookmaker(bookmaker = null, marketType = null, odd = null, stake = n
         });
 }
 
-// Function to remove a bookmaker entry
-function removeBookmaker(element) {
-    const bookmakerDiv = element.parentElement;
-    bookmakerDiv.remove();
-}
 
 // Function to remove a bookmaker entry
 function removeBookmaker(element) {
@@ -254,8 +237,7 @@ function saveBetDetails() {
 
     // Show loader while processing the request
     showMessage('Saving...');
-    const saveButton = document.getElementById('saveButton');
-    saveButton.style.display = 'none';
+    showMessage(false)
     fetch('https://api.arbs.site/bets', {
         method: 'POST',
         headers: {
@@ -266,7 +248,7 @@ function saveBetDetails() {
         .then(response => response.json())
         .then(data => {
             // Hide loader when the request is complete
-            showMessage('Saved!',3000);
+            showMessage('Saved!', 3000);
 
             if (data.betId) {
                 console.log('Bet saved successfully. Bet ID:', data.betId);
@@ -282,6 +264,45 @@ function saveBetDetails() {
         });
 }
 
+function getOptimizedStakes() {
+    const betDetails = collectBetDetails();
+
+    var money = document.getElementById('total_stake').value;
+    if (!money) {
+        money = 100;
+    }
+    var data = {event: betDetails, money:money};
+    fetch('https://api.arbs.site/bets/verify', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+        .then(response => response.json())
+        .then(data => {
+            // Hide loader when the request is complete
+            if (data.bet) {
+                data.bet.bookmakers.forEach((bookmaker, i) => {
+                    // Update the stake for each bookmaker based on the response data
+                    const bookmakerStakeInputs = document.querySelectorAll('.bookmakerStake');
+                    if (bookmakerStakeInputs && bookmakerStakeInputs.length > i) {
+                        bookmakerStakeInputs[i].value = bookmaker.bet_amount;
+                    } else {
+                        console.error('Error: Bookmaker stake input not found for index', i);
+                    }
+                });
+                // Reset the form or show the initial state
+
+            } else {
+                console.error('Error saving bet. No bet ID received.');
+            }
+        })
+        .catch(error => {
+            hideMessage();
+            console.error('Error saving bet:', error);
+        });
+}
 
 // Function to show loader
 function showMessage(text, time = null) {
@@ -303,5 +324,18 @@ function hideMessage() {
     // Find and remove the loader element
     const loader = document.getElementById('message');
     loader.style.display = 'none';
+}
+
+function updatePopupState(state) {
+    const saveBetForm = document.getElementById('saveBetForm');
+    const populateContainer = document.getElementById('populateContainer');
+    if (state === 'newBet') {
+        saveBetForm.style.display = 'block';
+        populateContainer.style.display = 'none'; // Hide the "Create Bet" button
+    } else {
+        document.getElementById('pastedText').value = '';
+        saveBetForm.style.display = 'none';
+        populateContainer.style.display = 'block'; // Hide the "Create Bet" button
+    }
 }
 

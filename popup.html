@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
     <title>Save Bet Form</title>
     <style>
@@ -13,20 +12,25 @@
             font-family: Arial, sans-serif;
             padding: 20px;
             min-width: 400px;
-            min-height: 300px;
+            min-height: calc(100vh - 80px); /* Account for the fixed button height */
+            margin-bottom: 80px; /* Adjust for the fixed button height */
         }
+
         h1 {
             text-align: center;
         }
+
         form {
             max-width: 400px;
             margin: 0 auto;
         }
+
         label {
             display: block;
             margin-bottom: 5px;
             color: #aaa;
         }
+
         input {
             width: calc(100% - 12px);
             padding: 8px;
@@ -35,50 +39,102 @@
             background-color: #444;
             color: #fff;
         }
-        button {
+
+        /* Fixed container at the bottom */
+        #betButtonsContainer {
+            position: fixed;
+            bottom: 0;
+            left: 50%; /* Align to the center */
+            transform: translateX(-50%); /* Center the container */
+            width: 440px;
+            padding: 20px;
+            background-color: #444;
+            display: flex;
+            justify-content: space-between; /* Place buttons at the ends */
+            align-items: center; /* Vertically center buttons */
+
+        }
+
+        button{
+            border: none;
+            background: none;
+            color: white;
+            cursor: pointer;
+        }
+        #saveBetForm {
+            display: none;
+        }
+
+        #saveButton, #populateButton {
             padding: 10px 20px;
             background-color: #00B073;
             color: #fff;
             border: none;
             cursor: pointer;
+        }
+
+        #populateButton{
+            display: block;
             width: 100%;
             margin-top: 10px;
         }
+        #resetButton {
+            cursor: pointer;
+            margin-right: 5px;
+        }
 
-        #loader{
+        #loader {
             text-align: center;
             display: none;
         }
+
         .bookmaker {
             margin-bottom: 20px;
             border: 1px solid #555;
             padding: 10px;
         }
+
         .remove {
             color: #ff3333;
             cursor: pointer;
         }
-        select.bookmakerName,select.bookmakerBet {
+
+        select.bookmakerName,
+        select.bookmakerBet {
             width: 100%;
             padding: 8px;
             margin-bottom: 10px;
             border: 1px solid #555;
             background-color: #444;
             color: #fff;
-
         }
     </style>
 </head>
+
 <body>
-<h1>Save Bet</h1>
-<form id="saveBetForm">
+<div id="populateContainer">
+    <label for="pastedText">Paste Text Structure:</label>
+    <textarea id="pastedText" class="pastedText" rows="10" cols="50"></textarea>
+    <button id="populateButton">Load Bet</button>
+</div>
+<div id="saveBetForm">
     <div id="bookmakersContainer">
     </div>
-<!--    <button type="button" id="addBookmaker">Add Bookmaker</button>-->
-    <button id="saveButton" style="display: none" type="submit">Save Bet</button>
-    <p id="message"></p>
-</form>
+    <div id="betButtonsContainer">
+        <!-- Save and Reset buttons aligned to the right -->
+        <div style="display: flex; justify-content: start;justify-items: center">
+            <input type="number" id="total_stake" placeholder="Total Stake" style=" width: 80px;margin:0;margin-right: 2px ">
+            <button id="optimizedStakes">Optimize Stakes</button>
+        </div>
+        <div style="display: flex; justify-content: end; justify-items: center">
+            <button id="resetButton">Clear</button>
+            <button id="saveButton" type="submit">Save Bet</button>
+        </div>
+    </div>
+</div>
+<p id="message"></p>
 <script src="popup.js"></script>
 
 </body>
+
 </html>

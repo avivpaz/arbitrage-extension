@@ -1,6 +1,7 @@
 let openedTabs = []; // Track IDs of opened tabs
 let betJson = null
 
+
 async function getBetJson() {
     return new Promise((resolve, reject) => {
         chrome.storage.local.get('betJson', function (result) {
